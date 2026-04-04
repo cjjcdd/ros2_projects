@@ -1,0 +1,67 @@
+<!-- -->
+<launch>
+    <arg name="model" default="standard"/>
+    <arg name="use_sim_time" default="true"/>
+
+    <include file="$(find-pkg-share ros_gz_sim)/launch/gz_sim.launch.py">
+        <arg name="gz_args" value="-r /home/jj/Desktop/ytu_lecs/robotics/lab1_soru/src/lab1/worlds/exp3.sdf"/>
+    </include>
+
+    <include file="$(find-pkg-share turtlebot4_description)/launch/robot_description.launch.py">
+        <arg name="model" value="$(var model)"/>
+        <arg name="use_sim_time" value="$(var use_sim_time)"/>
+    </include>
+
+    <node pkg="topic_tools" exec="relay" name="description_relay" args="/robot_description /turtlebot4/robot_description" />
+
+    <node pkg="ros_gz_sim" exec="create" name="spawn_robot" output="screen">
+        <param name="name" value="turtlebot4"/>
+        <param name="topic" value="robot_description"/>
+        <param name="z" value="0.1"/>
+    </node>
+
+    <node pkg="ros_gz_bridge" exec="parameter_bridge" name="minimal_bridge" 
+    	args="/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan
+            	/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock
+            	/model/turtlebot4/cmd_vel@geometry_msgs/msg/Twist@gz.msgs.Twist
+            	/model/turtlebot4/odometry@nav_msgs/msg/Odometry@gz.msgs.Odometry" >
+    </node>
+
+    <node pkg="robot_localization" exec="ekf_node" name="ekf_filter" output="screen">
+        <param name="use_sim_time" value="true"/>
+        <param name="odom_frame" value="turtlebot4/odom"/>
+        <param name="base_link_frame" value="base_link"/>
+        <param name="world_frame" value="turtlebot4/odom"/>
+        <param name="publish_tf" value="true"/>
+        <param name="odom0" value="/turtlebot4/odom"/>
+        <param name="odom0_config" value="[true, true, false, false, false, true, true, true, false, false, false, true, false, false, false]"/>
+    </node>
+
+    <node pkg="lab1" exec="trajectory" name="trajectory">
+        <param name="use_sim_time" value="true" />
+    </node>
+    <node pkg="lab1" exec="lidar_ray" name="lidar_ray">
+        <param name="use_sim_time" value="true" />
+    </node>
+    
+    <node pkg="teleop_twist_keyboard" exec="teleop_twist_keyboard" name="teleop_twist_keyboard" output="screen" launch-prefix="xterm -e">
+        <param name="stamped" value="true" />
+        <remap from="cmd_vel" to="/turtlebot4/diffdrive_controller/cmd_vel" />
+    </node>
+    
+
+  	<node pkg="tf2_ros" exec="static_transform_publisher" name="lidar2bridge" 	
+  		  args="--x 0 --y 0 --z 0 --roll 0 --pitch 0 --yaw 0 --frame-id rplidar_link --child-frame-id turtlebot4/rplidar_link/rplidar" />
+  	<node pkg="tf2_ros" exec="static_transform_publisher" name="map2odom" 		
+		  args="--x 0 --y 0 --z 0 --roll 0 --pitch 0 --yaw 0 --frame-id map --child-frame-id turtlebot4/odom" />
+  	<node pkg="tf2_ros" exec="static_transform_publisher" name="map2traj" 		
+  		  args="--x 0 --y 0 --z 0 --roll 0 --pitch 0 --yaw 0 --frame-id map --child-frame-id turtlebot4/trajectory" />
+	<node pkg="tf2_ros" exec="static_transform_publisher" name="map2rays" 		
+		  args="--x 0 --y 0 --z 0 --roll 0 --pitch 0 --yaw 0 --frame-id map --child-frame-id turtlebot4/lidar_rays" />
+
+    <node pkg="controller_manager" exec="spawner" name="joint_state_broadcaster_spawner" args="joint_state_broadcaster --controller-manager /turtlebot4/controller_manager"/>
+
+    <node pkg="controller_manager" exec="spawner" name="diffdrive_controller_spawner" args="diffdrive_controller --controller-manager /turtlebot4/controller_manager"/>
+	
+	<node pkg="rviz2" exec="rviz2" name="rviz_node" output="screen" args="-d $(find-pkg-share lab1)/config/lab1.rviz"/>
+</launch>
