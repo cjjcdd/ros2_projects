@@ -1,0 +1,282 @@
+Panels:
+  - Class: rviz_common/Displays
+    Help Height: 78
+    Name: Displays
+    Property Tree Widget:
+      Expanded:
+        - /Global Options1
+        - /Odometry Reader1
+        - /Dead Reckoning1
+        - /Localization Belief1
+        - /Trajectory Logger1
+      Splitter Ratio: 0.5
+    Tree Height: 800
+  - Class: rviz_common/Selection
+    Name: Selection
+  - Class: rviz_common/Tool Properties
+    Expanded:
+      - /2D Goal Pose1
+    Name: Tool Properties
+    Splitter Ratio: 0.5886790156364441
+  - Class: rviz_common/Views
+    Expanded:
+      - /Current View1
+    Name: Views
+    Splitter Ratio: 0.5
+
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Alpha: 0.5
+      Cell Size: 1
+      Class: rviz_default_plugins/Grid
+      Color: 160; 160; 164
+      Enabled: true
+      Line Style:
+        Line Width: 0.029999999329447746
+        Value: Lines
+      Name: Grid
+      Normal Cell Count: 0
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
+      Plane: XY
+      Plane Cell Count: 10
+      Reference Frame: <Fixed Frame>
+      Value: true
+
+    # ─────────────────────────────────────────────────────────────────────
+    # ODOMETRY READER displays
+    # ─────────────────────────────────────────────────────────────────────
+    - Class: rviz_default_plugins/Path
+      Color: 100; 100; 255
+      Enabled: true
+      Head Arrow Shaft Diameter: 0.10000000149011612
+      Head Length: 0.30000001192092896
+      Head Radius: 0.10000000149011612
+      Length: 0.30000001192092896
+      Line Style: Lines
+      Line Width: 0.029999999329447746
+      Name: Odom True Path
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
+      Pose Color: 255; 85; 255
+      Pose Style: None
+      Queue Size: 10
+      Radius: 0.029999999329447746
+      Shaft Diameter: 0.10000000149011612
+      Shaft Length: 0.10000000149011612
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        Filter size: 10
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /odom_path
+      Value: true
+
+    - Class: rviz_default_plugins/Marker
+      Enabled: true
+      Name: Odom Pose Marker
+      Namespaces:
+        robot_position: true
+      Queue Size: 100
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        Filter size: 10
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /odom_pose_marker
+      Value: true
+
+    # ─────────────────────────────────────────────────────────────────────
+    # DEAD RECKONING displays
+    # ─────────────────────────────────────────────────────────────────────
+    - Class: rviz_default_plugins/Path
+      Color: 255; 160; 0
+      Enabled: true
+      Name: DR Estimated Path
+      Queue Size: 10
+      Topic:
+        Value: /dr_path
+      Value: true
+
+    - Class: rviz_default_plugins/Path
+      Color: 0; 220; 80
+      Enabled: true
+      Name: True Odom Path
+      Queue Size: 10
+      Topic:
+        Value: /true_path
+      Value: true
+
+    - Class: rviz_default_plugins/Marker
+      Enabled: true
+      Name: DR Markers
+      Namespaces:
+        dead_reckoning: true
+        true_position: true
+        drift_error: true
+        error_text: true
+      Queue Size: 100
+      Topic:
+        Value: /dr_marker
+      Value: true
+
+    - Class: rviz_default_plugins/Marker
+      Enabled: true
+      Name: True Pos Marker
+      Queue Size: 100
+      Topic:
+        Value: /true_marker
+      Value: true
+
+    - Class: rviz_default_plugins/Marker
+      Enabled: true
+      Name: DR Error Line
+      Queue Size: 100
+      Topic:
+        Value: /dr_error_marker
+      Value: true
+
+    - Class: rviz_default_plugins/Marker
+      Enabled: true
+      Name: DR Error Text
+      Queue Size: 100
+      Topic:
+        Value: /dr_error_text
+      Value: true
+
+    # ─────────────────────────────────────────────────────────────────────
+    # LOCALIZATION BELIEF displays
+    # ─────────────────────────────────────────────────────────────────────
+    - Class: rviz_default_plugins/Marker
+      Enabled: true
+      Name: Particle Cloud
+      Namespaces:
+        particles: true
+      Queue Size: 100
+      Topic:
+        Value: /belief_cloud
+      Value: true
+
+    - Class: rviz_default_plugins/Marker
+      Enabled: true
+      Name: Belief Mean Arrow
+      Namespaces:
+        belief_mean: true
+      Queue Size: 100
+      Topic:
+        Value: /belief_mean
+      Value: true
+
+    - Class: rviz_default_plugins/Marker
+      Enabled: true
+      Name: Uncertainty Circle
+      Namespaces:
+        uncertainty_circle: true
+      Queue Size: 100
+      Topic:
+        Value: /belief_spread
+      Value: true
+
+    # ─────────────────────────────────────────────────────────────────────
+    # TRAJECTORY LOGGER displays
+    # ─────────────────────────────────────────────────────────────────────
+    - Class: rviz_default_plugins/Path
+      Color: 255; 255; 100
+      Enabled: true
+      Name: Logged Path
+      Queue Size: 10
+      Topic:
+        Value: /logged_path
+      Value: true
+
+    - Class: rviz_default_plugins/Marker
+      Enabled: true
+      Name: Start / Current / Heading
+      Namespaces:
+        start_pos: true
+        current_pos: true
+        heading: true
+        dist_label: true
+        return_line: true
+      Queue Size: 100
+      Topic:
+        Value: /start_marker
+      Value: true
+
+    - Class: rviz_default_plugins/Marker
+      Enabled: true
+      Name: Current Marker
+      Queue Size: 100
+      Topic:
+        Value: /current_marker
+      Value: true
+
+    - Class: rviz_default_plugins/Marker
+      Enabled: true
+      Name: Heading Arrow
+      Queue Size: 100
+      Topic:
+        Value: /heading_arrow
+      Value: true
+
+    - Class: rviz_default_plugins/Marker
+      Enabled: true
+      Name: Distance Label
+      Queue Size: 100
+      Topic:
+        Value: /distance_label
+      Value: true
+
+    - Class: rviz_default_plugins/Marker
+      Enabled: true
+      Name: Return Line
+      Queue Size: 100
+      Topic:
+        Value: /return_line
+      Value: true
+
+  Enabled: true
+  Global Options:
+    Background Color: 48; 48; 48
+    Fixed Frame: odom
+    Frame Rate: 30
+
+  Name: root
+  Tools:
+    - Class: rviz_default_plugins/Interact
+    - Class: rviz_default_plugins/MoveCamera
+    - Class: rviz_default_plugins/Select
+    - Class: rviz_default_plugins/FocusCamera
+    - Class: rviz_default_plugins/Measure
+      Line color: 128; 128; 0
+  Value: true
+  Views:
+    Current:
+      Class: rviz_default_plugins/Orbit
+      Distance: 12
+      Enable Stereo Rendering:
+        Stereo Eye Separation: 0.05999999865889549
+        Stereo Focal Distance: 1
+        Swap Stereo Eyes: false
+        Value: false
+      Focal Point:
+        X: 0
+        Y: 0
+        Z: 0
+      Focal Shape Fixed Size: true
+      Focal Shape Size: 0.05000000074505806
+      Invert Z Axis: false
+      Name: Current View
+      Near Clip Distance: 0.009999999776482582
+      Pitch: 1.0
+      Target Frame: <Fixed Frame>
+      Value: Orbit (rviz)
+      Yaw: 0
+    Saved: ~
