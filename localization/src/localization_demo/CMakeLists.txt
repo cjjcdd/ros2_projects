@@ -19,6 +19,8 @@ find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 
+include_directories(include)
+
 # ── Shared dependency list (used by all executables) ─────────────────────────
 set(DEPS
   rclcpp
