@@ -242,6 +242,61 @@ cal_map_size/
 ├── package.xml
 └── src/
     └── cal_map_size_node.cpp
+
+#include "rclcpp/rclcpp.hpp"
+#include "nav_msgs/msg/odometry.hpp"
+#include "nav_msgs/msg/occupancy_grid.hpp"
+
+class CAL_MAP_SIZE : public rclcpp::Node{
+public:
+    CAL_MAP_SIZE() : Node("CalculateMapSize"){
+
+        // /map konusuna abone oluyoruz
+        auto mapCb = [this](nav_msgs::msg::OccupancyGrid::UniquePtr map_msg) -> void {
+            float area_m2 = 0.0;
+            int known_cell_count = 0;
+
+            // Haritadaki her bir hücreyi kontrol et
+            for (int8_t cell_value : map_msg->data) {
+                // Bilinen hücreler: 0 (boş) veya 100 (dolu/duvar)
+                // Bilinmeyenler (-1) hesaplamaya dahil edilmez
+                if (cell_value >= 0) {
+                    known_cell_count++;
+                }
+            }
+
+            // Harita çözünürlüğünü al (metre/hücre)
+            float res = map_msg->info.resolution;
+
+            // Alan = Hücre Sayısı * (Çözünürlük * Çözünürlük)
+            area_m2 = known_cell_count * (res * res);
+            
+            RCLCPP_INFO(this->get_logger(), "Güncel Harita Boyutu -> %.2f m2", area_m2);		
+        };
+
+        map_sub_ = this->create_subscription<nav_msgs::msg::OccupancyGrid>("/map", 10, mapCb);
+    }
+
+private:
+    rclcpp::Subscription<nav_msgs::msg::OccupancyGrid>::SharedPtr map_sub_;
+};
+
+int main(int argc, char * argv[]){
+    rclcpp::init(argc, argv);
+    rclcpp::spin(std::make_shared<CAL_MAP_SIZE>());
+    rclcpp::shutdown();
+    return 0;
+}
+
+
+add_executable(calc_map_size src/calc_map_size.cpp)
+ament_target_dependencies(calc_map_size rclcpp nav_msgs sensor_msgs tf2 tf2_geometry_msgs visualization_msgs)
+
+install(TARGETS
+  calc_map_size
+  DESTINATION lib/${PROJECT_NAME})
+
+
 ```
 
 ---
